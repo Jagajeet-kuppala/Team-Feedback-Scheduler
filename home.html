@@ -2,31 +2,44 @@
 <html>
 <head>
     <base target="_top">
+    <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+    <?!= include('homeStylesheet'); ?>
 </head>
 <body>
-<form id="myForm" onsubmit="handleFormSubmit(this)">
+<div class="center">
     <div>
-        <label for="users">Users (Comma Seperated):</label>
-        <input name="users" type="text" required/>
+        <h1>Team Feedback Scheduler</h1>
     </div>
     <div>
-        <label for="startDate">Start Date:</label>
-        <input name="startDate" type="date" required>
+        <form id="myForm" onsubmit="handleFormSubmit(this)">
+            <div class="block form-group">
+                <label for="users">
+                    Users Mail Ids (Comma Separated):<textarea name="users" rows="3" required></textarea>
+                </label>
+            </div>
+            <div class="block form-group">
+                <label for="startDate">
+                    Start Date: <input name="startDate" type="date" required>
+                </label>
+            </div>
+            <div class="block inline form-group">
+                <label for="startTime">
+                    From: <input type="time" name="startTime" required>
+                </label>
+                <label for="endTime">
+                    To: <input type="time" name="endTime" required>
+                </label>
+            </div>
+            <input type="submit" class="block action" value="Submit" />
+        </form>
     </div>
-    <div>
-        <label for="startTime">From:</label>
-        <input type="time" name="startTime" required>
-        <label for="endTime">To:</label>
-        <input type="time" name="endTime" required>
-    </div>
-    <input type="submit" value="Submit" />
-</form>
-<div id="output"></div>
+    <div id="output"></div>
+</div>
 </body>
 <script>
     // Prevent forms from submitting.
     function preventFormSubmit() {
-        var forms = document.querySelectorAll('form');
+        const forms = document.querySelectorAll('form');
         for (var i = 0; i < forms.length; i++) {
             forms[i].addEventListener('submit', function(event) {
                 event.preventDefault();
@@ -39,7 +52,7 @@
         google.script.run.withSuccessHandler(updateScheduleStatus).processForm(formObject);
     }
     function updateScheduleStatus(status) {
-        var div = document.getElementById('output');
+        const div = document.getElementById('output');
         div.innerHTML = '<p>' + status + '</p>';
     }
 </script>
