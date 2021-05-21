@@ -1,8 +1,8 @@
 function processForm(formObject) {
     try {
         const {users, startDate, startTime, endTime} = formObject;
-        const usersList = users.split(',');
-        const userPairs = schedulePairs(usersList);
+        const userList = extractUsers(users);
+        const userPairs = schedulePairs(userList);
         scheduleEvents(userPairs, startDate, startTime, endTime);
 
         return "SUCCESS";
@@ -23,4 +23,14 @@ function schedulePairs(users) {
         users.splice(1, 0, users.pop());
     }
     return combos;
+}
+
+function extractUsers(userList) {
+    const users = userList.split(',');
+    const uniqueUsers = Array.from(new Set(users));
+
+    if (uniqueUsers.length < 2) throw "Need atleast two users to schedule meetings";
+    if (uniqueUsers.length%2 == 1) uniqueUsers.push("dummy@domain.com");
+
+    return uniqueUsers;
 }

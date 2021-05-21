@@ -8,7 +8,7 @@ function scheduleEvents(userPairs, startDate, startTime, endTime) {
 
     for (let i = 0; i < userPairs.length; i++) {
         for (let j = 0; j < userPairs[i].length; j++) {
-            if (userPairs[i][j][0] !== userPairs[i][j][1]) {
+            if (!dummyPair(userPairs[i][j])) {
                 createCalendarEvent(userPairs[i][j][0], userPairs[i][j][1], startDateTimeObj.toISOString(), endDateTimeObj.toISOString());
             }
         }
@@ -34,4 +34,8 @@ function getNextWorkingDay(date) {
 
 function isWeekend(date) {
     return date.getDay() === 0 || date.getDay() === 6;
+}
+
+function dummyPair(pairs) {
+    return pairs[0] === "dummy@domain.com" || pairs[1] === "dummy@domain.com";
 }

@@ -1,46 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <base target="_top">
-    <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
-    <?!= include('homeStylesheet'); ?>
+  <base target="_top">
+  <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
 </head>
 <body>
 <div class="center">
-    <div>
-        <h1>Team Feedback Scheduler</h1>
-    </div>
-    <div>
-        <form id="myForm" onsubmit="handleFormSubmit(this)">
-            <div class="block form-group">
-                <label for="users">
-                    Users Mail Ids (Comma Separated):<textarea name="users" rows="3" required></textarea>
-                </label>
-            </div>
-            <div class="block form-group">
-                <label for="startDate">
-                    Start Date: <input name="startDate" type="date" required>
-                </label>
-            </div>
-            <div class="block inline form-group">
-                <label for="startTime">
-                    From: <input type="time" name="startTime" required>
-                </label>
-                <label for="endTime">
-                    To: <input type="time" name="endTime" required>
-                </label>
-            </div>
-            <input type="submit" class="block action" value="Submit" />
-        </form>
-    </div>
-    <div id="output"></div>
+  <div class="center">
+    <h1>Team Feedback Scheduler</h1>
+  </div>
+  <div class="center">
+    <form id="myForm" onsubmit="handleFormSubmit(this)">
+      <div class="block form-group">
+        <label for="users" class="verticalMiddle">
+          Users Mail Ids: <input type="email" name="users" placeholder="Comma Separated" required multiple/>
+        </label>
+      </div>
+      <div class="block form-group">
+        <label for="startDate">
+          Start Date: <input name="startDate" type="date" required>
+        </label>
+      </div>
+      <div class="block inline form-group">
+        <label for="startTime">
+          From: <input type="time" name="startTime" required>
+        </label>
+        <label for="endTime">
+          To: <input type="time" name="endTime" required>
+        </label>
+      </div>
+      <input type="submit" class="block action" value="Submit" />
+    </form>
+  </div>
+  <div class="block center">
+    <label>
+      <h3 class="inline">Schedule Status:</h3>
+      <span id="output"></span>
+    </label>
+  </div>
 </div>
 </body>
 <script>
     // Prevent forms from submitting.
     function preventFormSubmit() {
         const forms = document.querySelectorAll('form');
-        for (var i = 0; i < forms.length; i++) {
+        for (let i = 0; i < forms.length; i++) {
             forms[i].addEventListener('submit', function(event) {
                 event.preventDefault();
             });
@@ -53,7 +57,16 @@
     }
     function updateScheduleStatus(status) {
         const div = document.getElementById('output');
-        div.innerHTML = '<p>' + status + '</p>';
+        div.innerHTML = status;
     }
 </script>
+<style>
+    .center {
+        margin: auto;
+        width: 60%;
+        /*border: 3px solid #ad2121;*/
+        padding: 10px;
+    }
+    h1 {text-align: center;}
+</style>
 </html>
