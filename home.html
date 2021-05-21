@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base target="_top">
+</head>
+<body>
+<form id="myForm" onsubmit="handleFormSubmit(this)">
+    <div>
+        <label for="users">Users (Comma Seperated):</label>
+        <input name="users" type="text" required/>
+    </div>
+    <div>
+        <label for="startDate">Start Date:</label>
+        <input name="startDate" type="date" required>
+    </div>
+    <div>
+        <label for="startTime">From:</label>
+        <input type="time" name="startTime" required>
+        <label for="endTime">To:</label>
+        <input type="time" name="endTime" required>
+    </div>
+    <input type="submit" value="Submit" />
+</form>
+<div id="output"></div>
+</body>
+<script>
+    // Prevent forms from submitting.
+    function preventFormSubmit() {
+        var forms = document.querySelectorAll('form');
+        for (var i = 0; i < forms.length; i++) {
+            forms[i].addEventListener('submit', function(event) {
+                event.preventDefault();
+            });
+        }
+    }
+    window.addEventListener('load', preventFormSubmit);
+
+    function handleFormSubmit(formObject) {
+        google.script.run.withSuccessHandler(updateScheduleStatus).processForm(formObject);
+    }
+    function updateScheduleStatus(status) {
+        var div = document.getElementById('output');
+        div.innerHTML = '<p>' + status + '</p>';
+    }
+</script>
+</html>
