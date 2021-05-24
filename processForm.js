@@ -29,8 +29,8 @@ function extractUsers(userList) {
     const users = userList.split(',');
     const uniqueUsers = Array.from(new Set(users));
 
-    if (uniqueUsers.length < 2) throw "Need atleast two users to schedule meetings";
-    if (uniqueUsers.length%2 == 1) uniqueUsers.push("dummy@domain.com");
+    if (uniqueUsers.length < 2) throw new Error("Need atleast two users to schedule meetings");
+    if (uniqueUsers.length%2 == 1) uniqueUsers.push(PropertiesService.getScriptProperties().getProperty('DUMMY_USER'));
 
     return uniqueUsers;
 }

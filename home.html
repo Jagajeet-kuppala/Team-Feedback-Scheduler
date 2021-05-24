@@ -18,15 +18,15 @@
       </div>
       <div class="block form-group">
         <label for="startDate">
-          Start Date: <input name="startDate" type="date" required>
+          Start Date: <input name="startDate" type="date" placeholder="dd/mm/yyyy" required>
         </label>
       </div>
       <div class="block inline form-group">
         <label for="startTime">
-          From: <input type="time" name="startTime" required>
+          From: <input type="time" name="startTime" placeholder="HH:MM AM" required>
         </label>
         <label for="endTime">
-          To: <input type="time" name="endTime" required>
+          To: <input type="time" name="endTime" placeholder="HH:MM PM" required>
         </label>
       </div>
       <input type="submit" class="block action" value="Submit" />
@@ -41,6 +41,7 @@
 </div>
 </body>
 <script>
+    google.script.run.globalSetting();
     // Prevent forms from submitting.
     function preventFormSubmit() {
         const forms = document.querySelectorAll('form');
