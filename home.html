@@ -5,29 +5,29 @@
   <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
 </head>
 <body>
+<div class="header">
+  <h1>Team Feedback Scheduler</h1>
+</div>
 <div class="center">
-  <div class="center">
-    <h1>Team Feedback Scheduler</h1>
-  </div>
-  <div class="center">
+  <div class="center divShadowEffect">
     <form id="myForm" onsubmit="handleFormSubmit(this)">
       <div class="block form-group">
-        <label for="users" class="verticalMiddle">
-          Users Mail Ids: <input type="email" name="users" placeholder="Comma Separated" required multiple/>
-        </label>
+        <label for="users" class="verticalMiddle">Users Mail IDs</label>
+        <input type="email" name="users" placeholder="Comma Separated" required multiple/>
       </div>
       <div class="block form-group">
-        <label for="startDate">
-          Start Date: <input name="startDate" type="date" placeholder="dd/mm/yyyy" required>
-        </label>
+        <label for="startDate">Start Date</label>
+        <input name="startDate" type="date" placeholder="dd/mm/yyyy" required>
       </div>
       <div class="block inline form-group">
-        <label for="startTime">
-          From: <input type="time" name="startTime" placeholder="HH:MM AM" required>
-        </label>
-        <label for="endTime">
-          To: <input type="time" name="endTime" placeholder="HH:MM PM" required>
-        </label>
+        <div style="float:left;">
+          <label for="startTime">From</label>
+          <input type="time" name="startTime" placeholder="HH:MM AM" required>
+        </div>
+        <div style="float:left;">
+          <label for="endTime">To</label>
+          <input type="time" name="endTime" placeholder="HH:MM PM" required>
+        </div>
       </div>
       <input type="submit" class="block action" value="Submit" />
     </form>
@@ -41,7 +41,7 @@
 </div>
 </body>
 <script>
-    google.script.run.globalSetting();
+    google.script.run.globalSettings();
     // Prevent forms from submitting.
     function preventFormSubmit() {
         const forms = document.querySelectorAll('form');
@@ -54,6 +54,8 @@
     window.addEventListener('load', preventFormSubmit);
 
     function handleFormSubmit(formObject) {
+        const div = document.getElementById('output');
+        div.innerHTML = "Scheduling...";
         google.script.run.withSuccessHandler(updateScheduleStatus).processForm(formObject);
     }
     function updateScheduleStatus(status) {
@@ -68,6 +70,30 @@
         /*border: 3px solid #ad2121;*/
         padding: 10px;
     }
-    h1 {text-align: center;}
+    h1 {
+        color: white;
+    }
+    .divShadowEffect{
+        -webkit-box-shadow: 0 10px 6px -6px #777;
+        -moz-box-shadow: 0 10px 6px -6px #777;
+        box-shadow: 0 10px 6px -6px #777;
+        border: 1px solid gray;
+    }
+    .header {
+        width: 100vw;
+        padding: 20px;
+        text-align: center;
+        background: -webkit-linear-gradient(top, #4d90fe, #4787ed);
+        color: #ffffff;
+        font-size: 20px;
+    }
+    input[type=button], input[type=submit], input[type=reset] {
+        width: 30%;
+        margin: 0 auto;
+        display: block;
+    }
+    input {
+        width: 100%;
+    }
 </style>
 </html>

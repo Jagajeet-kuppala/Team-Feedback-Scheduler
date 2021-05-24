@@ -1,4 +1,4 @@
-function globalSetting(){
-    var userProperties = PropertiesService.getUserProperties();
+function globalSettings(){
+    const userProperties = PropertiesService.getUserProperties();
     userProperties.setProperty('DUMMY_USER','dummy@domain.com');
 }
