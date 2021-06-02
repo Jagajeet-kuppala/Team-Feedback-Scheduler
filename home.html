@@ -10,6 +10,15 @@
   <div class="header">
     <h1>Team Feedback Scheduler</h1>
   </div>
+  <div class="toggleCenter">
+    <label class="switch">
+      <input type="checkbox" id="formSelector" onclick="toggleForm()">
+      <div class="slider round">
+        <span class="on">Speedback</span>
+        <span class="off">Feedback</span>
+      </div>
+    </label>
+  </div>
   <div class="center">
     <div id="feedback">
       <div class="center divShadowEffect">
@@ -97,12 +106,33 @@
     div.innerHTML = status;
   }
 
+  function toggleForm() {
+    var feedbackDiv = document.getElementById("feedback");
+    var speedbackDiv = document.getElementById("speedback");
+    var toggleButton = document.getElementById("formSelector")
+
+    if(toggleButton.checked) {
+      feedbackDiv.style.display = "none";
+      speedbackDiv.style.display = "block";
+    }
+    else{
+      feedbackDiv.style.display = "block";
+      speedbackDiv.style.display = "none";
+    }
+  }
 </script>
 <style>
   .center {
     margin: auto;
     width: 60%;
     /*border: 3px solid #ad2121;*/
+    padding: 10px;
+  }
+
+  .toggleCenter {
+    margin: auto;
+    width: 8%;
+    /* border: 3px solid #ad2121; */
     padding: 10px;
   }
 
@@ -149,6 +179,94 @@
     text-align: center;
     padding: 8px;
   }
+  .switch {
+      position: relative;
+      display: inline-block;
+      width: 150px;
+      height: 34px;
+    }
+
+    .switch input {
+      display: none;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: black;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    input:checked+.slider {
+      background-color: darkslategrey;
+    }
+
+    input:focus+.slider {
+      box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked+.slider:before {
+      -webkit-transform: translateX(115px);
+      -ms-transform: translateX(115px);
+      transform: translateX(115px);
+    }
+
+    .on {
+      display: none;
+    }
+
+    .on,
+    .off {
+      color: white;
+      position: absolute;
+      transform: translate(-50%, -50%);
+      top: 50%;
+      left: 50%;
+      font-size: 15px;
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+    }
+
+    input:checked+.slider .on {
+      display: block;
+    }
+
+    input:checked+.slider .off {
+      display: none;
+    }
+
+    .slider.round {
+      border-radius: 34px;
+    }
+
+    .slider.round:before {
+      border-radius: 50%;
+    }
+
+    #feedback {
+      display: block;
+    }
+
+    #speedback {
+      display: none;
+    }
 </style>
 
 </html>
