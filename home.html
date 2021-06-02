@@ -1,99 +1,154 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <base target="_top">
   <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
 </head>
+
 <body>
-<div class="header">
-  <h1>Team Feedback Scheduler</h1>
-</div>
-<div class="center">
-  <div class="center divShadowEffect">
-    <form id="myForm" onsubmit="handleFormSubmit(this)">
-      <div class="block form-group">
-        <label for="users" class="verticalMiddle">Users Mail IDs</label>
-        <input type="email" name="users" placeholder="Comma Separated" required multiple/>
-      </div>
-      <div class="block form-group">
-        <label for="startDate">Start Date</label>
-        <input name="startDate" type="date" placeholder="dd/mm/yyyy" required>
-      </div>
-      <div class="block inline form-group">
-        <div style="float:left;">
-          <label for="startTime">From</label>
-          <input type="time" name="startTime" placeholder="HH:MM AM" required>
-        </div>
-        <div style="float:left;">
-          <label for="endTime">To</label>
-          <input type="time" name="endTime" placeholder="HH:MM PM" required>
-        </div>
-      </div>
-      <input type="submit" class="block action" value="Submit" />
-    </form>
+  <div class="header">
+    <h1>Team Feedback Scheduler</h1>
   </div>
-  <div class="block center">
-    <label>
-      <h3 class="inline">Schedule Status:</h3>
-      <span id="output"></span>
-    </label>
+  <div class="center">
+    <div id="feedback">
+      <div class="center divShadowEffect">
+        <form id="feedbackForm" onsubmit="handleFeedbackFormSubmit(this)">
+          <div class="block form-group">
+            <label for="users" class="verticalMiddle">Users Mail IDs</label>
+            <input type="email" name="users" placeholder="Comma Separated" required multiple />
+          </div>
+          <div class="block form-group">
+            <label for="startDate">Start Date</label>
+            <input name="startDate" type="date" placeholder="dd/mm/yyyy" required>
+          </div>
+          <div class="block inline form-group">
+            <div style="float:left;">
+              <label for="startTime">From</label>
+              <input type="time" name="startTime" placeholder="HH:MM AM" required>
+            </div>
+            <div style="float:left;">
+              <label for="endTime">To</label>
+              <input type="time" name="endTime" placeholder="HH:MM PM" required>
+            </div>
+          </div>
+          <input type="submit" class="block action" value="Submit" />
+        </form>
+        <div class="block center">
+          <label>
+            <h3 class="inline">Schedule Status:</h3>
+            <span id="feedbackScheduleStatus"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div id="speedback">
+      <div class="center divShadowEffect">
+        <form id="speedbackForm" onsubmit="handleSpeedbackFormSubmit(this)">
+          <div class="block form-group">
+            <label for="users" class="verticalMiddle">
+              Teammates: <input type="text" name="users" placeholder="Comma Separated" required multiple />
+            </label>
+          </div>
+          <input type="submit" class="block action" value="Submit" />
+        </form>
+        <div class="block center">
+          <label>
+            <h3 class="inline">Schedule Status:</h3>
+            <span id="speedbackScheduleStatus"></span>
+          </label>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
 </body>
 <script>
-    google.script.run.globalSettings();
-    // Prevent forms from submitting.
-    function preventFormSubmit() {
-        const forms = document.querySelectorAll('form');
-        for (let i = 0; i < forms.length; i++) {
-            forms[i].addEventListener('submit', function(event) {
-                event.preventDefault();
-            });
-        }
+  google.script.run.globalSettings();
+  // Prevent forms from submitting.
+  function preventFormSubmit() {
+    const forms = document.querySelectorAll('form');
+    for (let i = 0; i < forms.length; i++) {
+      forms[i].addEventListener('submit', function (event) {
+        event.preventDefault();
+      });
     }
-    window.addEventListener('load', preventFormSubmit);
+  }
+  window.addEventListener('load', preventFormSubmit);
 
-    function handleFormSubmit(formObject) {
-        const div = document.getElementById('output');
-        div.innerHTML = "Scheduling...";
-        google.script.run.withSuccessHandler(updateScheduleStatus).processForm(formObject);
-    }
-    function updateScheduleStatus(status) {
-        const div = document.getElementById('output');
-        div.innerHTML = status;
-    }
+  function handleFeedbackFormSubmit(formObject) {
+    const div = document.getElementById('feedbackScheduleStatus');
+    div.innerHTML = "Scheduling...";
+    google.script.run.withSuccessHandler(updateFeedbackSchedulerStatus).processFeedbackForm(formObject);
+  }
+
+  function handleSpeedbackFormSubmit(formObject) {
+    const div = document.getElementById('speedbackScheduleStatus');
+    div.innerHTML = "Scheduling...";
+    google.script.run.withSuccessHandler(updateSpeedbackSchedulerStatus).processSpeedbackForm(formObject);
+  }
+
+  function updateFeedbackSchedulerStatus(status) {
+    const div = document.getElementById('feedbackScheduleStatus');
+    div.innerHTML = status;
+  }
+
+  function updateSpeedbackSchedulerStatus(status) {
+    const div = document.getElementById('speedbackScheduleStatus');
+    div.innerHTML = status;
+  }
+
 </script>
 <style>
-    .center {
-        margin: auto;
-        width: 60%;
-        /*border: 3px solid #ad2121;*/
-        padding: 10px;
-    }
-    h1 {
-        color: white;
-    }
-    .divShadowEffect{
-        -webkit-box-shadow: 0 10px 6px -6px #777;
-        -moz-box-shadow: 0 10px 6px -6px #777;
-        box-shadow: 0 10px 6px -6px #777;
-        border: 1px solid gray;
-    }
-    .header {
-        width: 100vw;
-        padding: 20px;
-        text-align: center;
-        background: -webkit-linear-gradient(top, #4d90fe, #4787ed);
-        color: #ffffff;
-        font-size: 20px;
-    }
-    input[type=button], input[type=submit], input[type=reset] {
-        width: 30%;
-        margin: 0 auto;
-        display: block;
-    }
-    input {
-        width: 100%;
-    }
+  .center {
+    margin: auto;
+    width: 60%;
+    /*border: 3px solid #ad2121;*/
+    padding: 10px;
+  }
+
+  h1 {
+    color: white;
+  }
+
+  .divShadowEffect {
+    -webkit-box-shadow: 0 10px 6px -6px #777;
+    -moz-box-shadow: 0 10px 6px -6px #777;
+    box-shadow: 0 10px 6px -6px #777;
+    border: 1px solid gray;
+  }
+
+  .header {
+    width: 100vw;
+    padding: 20px;
+    text-align: center;
+    background: -webkit-linear-gradient(top, #4d90fe, #4787ed);
+    color: #ffffff;
+    font-size: 20px;
+  }
+
+  input[type=button],
+  input[type=submit],
+  input[type=reset] {
+    width: 30%;
+    margin: 0 auto;
+    display: block;
+  }
+
+  input {
+    width: 100%;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  td,
+  th {
+    border: 1px solid #dddddd;
+    text-align: center;
+    padding: 8px;
+  }
 </style>
+
 </html>
