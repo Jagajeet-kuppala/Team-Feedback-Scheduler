@@ -43,7 +43,7 @@
           </div>
           <input type="submit" class="block action" value="Submit" />
         </form>
-        <div class="block center">
+        <div class="block">
           <label>
             <h3 class="inline">Schedule Status:</h3>
             <span id="feedbackScheduleStatus"></span>
@@ -56,16 +56,19 @@
         <form id="speedbackForm" onsubmit="handleSpeedbackFormSubmit(this)">
           <div class="block form-group">
             <label for="users" class="verticalMiddle">
-              Teammates: <input type="text" name="users" placeholder="Comma Separated" required multiple />
+              Teammates Names: <input type="text" name="users" placeholder="Comma Separated" required multiple />
             </label>
           </div>
           <input type="submit" class="block action" value="Submit" />
         </form>
-        <div class="block center">
+        <div class="block">
           <label>
             <h3 class="inline">Schedule Status:</h3>
-            <span id="speedbackScheduleStatus"></span>
+<!--            <span id="speedbackScheduleStatus"></span>-->
           </label>
+          <div class="block tableCenter" id="speedbackScheduleStatus">
+
+          </div>
         </div>
       </div>
     </div>
@@ -73,6 +76,24 @@
 </body>
 <script>
   google.script.run.globalSettings();
+
+  const todaysDate = new Date().toISOString().split('T')[0];
+  document.getElementsByName("startDate")[0].setAttribute('min', todaysDate);
+
+  document.getElementsByName("startDate")[0].addEventListener("change", function () {
+      const startDate = document.getElementsByName("startDate")[0].value;
+      if(startDate === todaysDate) {
+          const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+          document.getElementsByName("startTime")[0].setAttribute('min', currentTime);
+      } else {
+          document.getElementsByName("startTime")[0].removeAttribute('min');
+      }
+  });
+
+  document.getElementsByName("startTime")[0].addEventListener("change", function () {
+      const startTime = document.getElementsByName("startTime")[0].value;
+      document.getElementsByName("endTime")[0].setAttribute('min', startTime);
+  });
   // Prevent forms from submitting.
   function preventFormSubmit() {
     const forms = document.querySelectorAll('form');
@@ -107,9 +128,9 @@
   }
 
   function toggleForm() {
-    var feedbackDiv = document.getElementById("feedback");
-    var speedbackDiv = document.getElementById("speedback");
-    var toggleButton = document.getElementById("formSelector")
+    const feedbackDiv = document.getElementById("feedback");
+    const speedbackDiv = document.getElementById("speedback");
+    const toggleButton = document.getElementById("formSelector");
 
     if(toggleButton.checked) {
       feedbackDiv.style.display = "none";
@@ -127,6 +148,13 @@
     width: 60%;
     /*border: 3px solid #ad2121;*/
     padding: 10px;
+  }
+
+  .tableCenter {
+      margin: auto;
+      width: 80%;
+      /*border: 3px solid #ad2121;*/
+      padding: 10px;
   }
 
   .toggleCenter {
@@ -173,6 +201,11 @@
     width: 100%;
   }
 
+  th {
+      background-color: #696969;
+      color: white;
+      font-weight: bold;
+  }
   td,
   th {
     border: 1px solid #dddddd;

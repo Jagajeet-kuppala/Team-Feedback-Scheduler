@@ -2,6 +2,9 @@ function processSpeedbackForm(formObject) {
   try {
     const { users } = formObject;
     const userList = getValidUsers(users);
+      for(let user = 0; user < userList.length; user++) {
+          userList[user] = userList[user].slice(0, 25);
+      }
     const schedule = getSchedulePairs(userList);
 
     let scheduleTable = "";
