@@ -1,3 +1,9 @@
 function doGet() {
-  return HtmlService.createHtmlOutputFromFile('home');
+  return HtmlService.createTemplateFromFile('home')
+      .evaluate();
+}
+
+function include(filename) {
+  return HtmlService.createHtmlOutputFromFile(filename)
+      .getContent();
 }
