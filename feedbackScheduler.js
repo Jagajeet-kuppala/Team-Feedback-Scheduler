@@ -1,4 +1,5 @@
 function doGet() {
+  globalSettings();
   return HtmlService.createTemplateFromFile('home')
       .evaluate();
 }

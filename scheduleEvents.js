@@ -52,5 +52,5 @@ function isWeekend(date) {
 }
 
 function hasDummyUser(pairs) {
-    return pairs.includes(PropertiesService.getScriptProperties().getProperty('DUMMY_USER'));
+    return pairs.includes(PropertiesService.getUserProperties().getProperty('DUMMY_USER'));
 }

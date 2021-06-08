@@ -1,7 +1,11 @@
 function processSpeedbackForm(formObject) {
   try {
+    const MAX_USERNAME_LENGTH = 25;
     const { users } = formObject;
     const userList = getValidUsers(users);
+    for (let itr = 0; itr < userList.length; itr++) {
+      userList[itr] = userList[itr].slice(0,MAX_USERNAME_LENGTH);
+    }
     const schedule = getSchedulePairs(userList);
 
     let scheduleTable = "";
@@ -20,12 +24,12 @@ function tableCreator(userPairs) {
   for (let pair = 0; pair < userPairs.length; ++pair) {
     const user1 =
       userPairs[pair][0] ===
-      PropertiesService.getScriptProperties().getProperty("DUMMY_USER")
+      PropertiesService.getUserProperties().getProperty("DUMMY_USER")
         ? "TIMEKEEPER"
         : userPairs[pair][0];
     const user2 =
       userPairs[pair][1] ===
-      PropertiesService.getScriptProperties().getProperty("DUMMY_USER")
+      PropertiesService.getUserProperties().getProperty("DUMMY_USER")
         ? "TIMEKEEPER"
         : userPairs[pair][1];
     table = table + `<tr><td>${user1}</td><td>${user2}</td></tr>`;
