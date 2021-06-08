@@ -4,6 +4,7 @@
 <head>
   <base target="_top">
   <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <?!= include('homeCSS'); ?>
 </head>
 
@@ -49,8 +50,11 @@
             <input name="startDate" type="date" placeholder="dd/mm/yyyy" required>
           </div>
           <div class="block inline form-group" id="slots">
-            <h4>Slots (Max 5 Slots): </h4>
-            <input type="button" class="block action" value="Add Slot" onclick="addSlot()">
+            <div class="relative">
+              <p font-weight="bold">Slots (Max 5 Slots):
+                <button display="inline-block" class="action" onclick="addSlot()">Add Slot</button>
+              </p>
+            </div>
             <div id="slot" name="slot">
               <div style="float:left;">
                 <label for="startTime">From</label>
@@ -61,7 +65,7 @@
                 <input type="time" name="endTime" id="endTime" placeholder="HH:MM PM" required>
               </div>
               <div style="float:left;">
-                <input type="button" class="block action" value="-" onclick="removeSlot(this)">
+                <button class="btn" onclick="removeSlot(this)"><i class="material-icons" >delete</i></button>
               </div>
             </div>
           </div>
