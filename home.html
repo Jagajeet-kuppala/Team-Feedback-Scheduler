@@ -48,14 +48,21 @@
             <label for="startDate">Start Date</label>
             <input name="startDate" type="date" placeholder="dd/mm/yyyy" required>
           </div>
-          <div class="block inline form-group">
-            <div style="float:left;">
-              <label for="startTime">From</label>
-              <input type="time" name="startTime" placeholder="HH:MM AM" required>
-            </div>
-            <div style="float:left;">
-              <label for="endTime">To</label>
-              <input type="time" name="endTime" placeholder="HH:MM PM" required>
+          <div class="block inline form-group" id="slots">
+            <h4>Slots (Max 5 Slots): </h4>
+            <input type="button" class="block action" value="Add Slot" onclick="addSlot()">
+            <div id="slot" name="slot">
+              <div style="float:left;">
+                <label for="startTime">From</label>
+                <input type="time" name="startTime" id="startTime" placeholder="HH:MM AM" required>
+              </div>
+              <div style="float:left;">
+                <label for="endTime">To</label>
+                <input type="time" name="endTime" id="endTime" placeholder="HH:MM PM" required>
+              </div>
+              <div style="float:left;">
+                <input type="button" class="block action" value="-" onclick="removeSlot(this)">
+              </div>
             </div>
           </div>
           <input type="hidden" name="userDateTime" value="">
@@ -105,15 +112,19 @@
     const startDate = document.getElementsByName("startDate")[0].value;
     if (startDate === todaysDate) {
       const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-      document.getElementsByName("startTime")[0].setAttribute('min', currentTime);
+      for (let slotItr = 0; slotItr < document.getElementsByName("startDate").length; slotItr++) {
+        document.getElementsByName("startTime")[slotItr].setAttribute('min', currentTime);
+      }
     } else {
-      document.getElementsByName("startTime")[0].removeAttribute('min');
+      for (let slotItr = 0; slotItr < document.getElementsByName("startDate").length; slotItr++) {
+        document.getElementsByName("startTime")[slotItr].removeAttribute('min');
+      }
     }
   });
 
   document.getElementsByName("startTime")[0].addEventListener("change", function () {
-    const startTime = document.getElementsByName("startTime")[0].value;
-    document.getElementsByName("endTime")[0].setAttribute('min', startTime);
+      const startTime = document.getElementsByName("startTime")[0].value;
+      document.getElementsByName("endTime")[0].setAttribute('min', startTime);
   });
   // Prevent forms from submitting.
   function preventFormSubmit() {
@@ -148,6 +159,31 @@
   function updateSpeedbackSchedulerStatus(status) {
     const div = document.getElementById('speedbackScheduleStatus');
     div.innerHTML = status;
+  }
+
+  function addSlot() {
+    const slots = document.getElementById("slots");
+    const slotDiv = document.createElement('div');
+
+    const allSlots = document.getElementsByName("slot");
+    if(allSlots.length < 5) {
+        slotDiv.innerHTML = document.getElementById("slot").innerHTML;
+        slotDiv.id = "slot";
+        slotDiv.setAttribute("name", "slot");
+        slots.appendChild(slotDiv);
+        const startTimeEle = slotDiv.querySelector('input#startTime');
+        startTimeEle.addEventListener("change", function () {
+            const startTime = startTimeEle.value;
+            slotDiv.querySelector('input#endTime').setAttribute('min', startTime);
+        });
+    }
+  }
+
+  function removeSlot (input) {
+      const allSlots = document.getElementsByName("slot");
+      if(allSlots.length > 1) {
+        input.parentNode.parentNode.remove();
+      }
   }
 
   function toggleForm() {
