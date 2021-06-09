@@ -1,18 +1,18 @@
 function processSpeedbackForm(formObject) {
   try {
     const MAX_USERNAME_LENGTH = 25;
-    const { users } = formObject;
+    const { users, slotTime } = formObject;
     const userList = getValidUsers(users);
     for (let itr = 0; itr < userList.length; itr++) {
       userList[itr] = userList[itr].slice(0,MAX_USERNAME_LENGTH);
     }
     const schedule = getSchedulePairs(userList);
 
-    let scheduleTable = "";
+    let scheduleTables = [];
     for (let slot = 0; slot < schedule.length; ++slot) {
-      scheduleTable = scheduleTable + tableCreator(schedule[slot]);
+      scheduleTables.push(tableCreator(schedule[slot]));
     }
-    return scheduleTable;
+    return {scheduleTables, slotTime};
   } catch (err) {
     Logger.log(err);
     return err.message;
