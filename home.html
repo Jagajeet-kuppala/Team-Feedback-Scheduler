@@ -31,12 +31,14 @@
           <li>Email IDs of all teammates separated by commas.</li>
           <li>Select a start date from which the meetings should be scheduled.</li>
           <li>Pick the start time and end time for each meeting slot (Should not overlap with other slots)</li>
-          <li>If more slots are required for each day, click on 'Add Slot' and pick the start and end time for the same.</li>
+          <li>If more slots are required for each day, click on 'Add Slot' and pick the start and end time for the same.
+          </li>
           <li>Once times have been filled in, click 'Submit'.</li>
         </ol>
         Tadaa.. Your meetings are scheduled!
         <br>
-        <p><label>NOTE:</label> One who schedules the meeting is the organizer of all meetings and you could add teammates outside
+        <p><label>NOTE:</label> One who schedules the meeting is the organizer of all meetings and you could add
+          teammates outside
           ThoughtWorks too!</p>
       </div>
       <div class="center divShadowEffect">
@@ -52,7 +54,7 @@
           <div class="block inline form-group" id="slots">
             <div class="relative">
               <label font-weight="bold">Slots (Max 5 Slots):</label>
-                <button display="inline-block" class="action" onclick="addSlot()">Add Slot</button>
+              <button display="inline-block" class="action" onclick="addSlot()">Add Slot</button>
             </div>
             <div id="slot" name="slot">
               <div style="float:left;">
@@ -64,7 +66,7 @@
                 <input type="time" name="endTime" id="endTime" placeholder="HH:MM PM" required>
               </div>
               <div style="float:left;">
-                <button class="btn" onclick="removeSlot(this)"><i class="material-icons" >delete</i></button>
+                <button class="btn" onclick="removeSlot(this)"><i class="material-icons">delete</i></button>
               </div>
             </div>
           </div>
@@ -101,8 +103,9 @@
           <div id="startSpeedback"></div>
           <div class="block tableCenter" id="speedbackScheduleStatus">
           </div>
-        </div>
+        </div> 
       </div>
+      <div id="speedbackTimer" class="base-timer"></div>
     </div>
   </div>
 </body>
@@ -125,8 +128,8 @@
   });
 
   document.getElementsByName("startTime")[0].addEventListener("change", function () {
-      const startTime = document.getElementsByName("startTime")[0].value;
-      document.getElementsByName("endTime")[0].setAttribute('min', startTime);
+    const startTime = document.getElementsByName("startTime")[0].value;
+    document.getElementsByName("endTime")[0].setAttribute('min', startTime);
   });
   // Prevent forms from submitting.
   function preventFormSubmit() {
@@ -159,35 +162,71 @@
   }
 
   function updateSpeedbackSchedulerStatus(schedule) {
-      const MS_TO_MINS_MULTIPLIER = 60000;
-      const { scheduleTables, slotTime } = schedule;
-      const div = document.getElementById('speedbackScheduleStatus');
-      div.innerHTML = scheduleTables[0];
-      document.getElementById('startSpeedback').innerHTML =
-          `<input class="block action" id="startButton" type="submit" value="Start Round" />`;
-      document.getElementById('startButton').addEventListener('click', function () {
-          timer((slotTime * MS_TO_MINS_MULTIPLIER), 0, scheduleTables);
-      });
+    const MS_TO_MINS_MULTIPLIER = 60000;
+    const { scheduleTables, slotTime } = schedule;
+    const div = document.getElementById('speedbackScheduleStatus');
+    div.innerHTML = scheduleTables[0];
+    document.getElementById('startSpeedback').innerHTML =
+      `<input class="block action" id="startButton" type="submit" value="Start Round" />`
+    insertTimer(slotTime);
+    document.getElementById('startButton').addEventListener('click', function () {
+      timer((slotTime * MS_TO_MINS_MULTIPLIER), 0, scheduleTables);
+    });
+  }
+
+  function insertTimer(time) {
+    const div = document.getElementById('speedbackTimer');
+    div.innerHTML = 
+    `<svg class="base-timer__svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <g class="base-timer__circle">
+        <circle class="base-timer__path-elapsed" cx="50" cy="50" r="45"></circle>
+        <path
+          id="base-timer-path-remaining"
+          stroke-dasharray="283"
+          class="base-timer__path-remaining green"
+          d="
+            M 50, 50
+            m -45, 0
+            a 45,45 0 1,0 90,0
+            a 45,45 0 1,0 -90,0
+          "
+        ></path>
+      </g>
+    </svg>
+    <span id="base-timer-label" class="base-timer__label">${formatTime(time * 60)}</span>`;
+  }
+
+  function formatTime(time) {
+    const minutes = Math.floor(time / 60);
+    let seconds = time % 60;
+
+    if (seconds < 10) {
+      seconds = `0${seconds}`;
+    }
+
+    return `${minutes}:${seconds}`;
   }
 
   async function timer(waitTime, tableId, scheduleTables) {
-      document.getElementById('startButton').disabled = true;
-      const div = document.getElementById('speedbackScheduleStatus');
-      setTimeout(function() {
-          if((tableId+1) < scheduleTables.length) {
-              div.innerHTML = scheduleTables[tableId+1];
-              document.getElementById('startSpeedback').innerHTML =
-                  '<input class="block action" id="startButton" type="submit" value="Start Round" />';
-              const startButton = document.getElementById('startButton');
-              startButton.addEventListener('click', function () {
-                timer(waitTime, (tableId + 1), scheduleTables);
-              });
-              startButton.disabled = false;
-          } else {
-              document.getElementById('startSpeedback').innerHTML = "Hope this Speedback helped you!";
-              div.innerHTML = "See you next time :-)";
-          }
-      }, waitTime );
+    startTimer(waitTime / 1000);
+    document.getElementById('startButton').disabled = true;
+    const div = document.getElementById('speedbackScheduleStatus');
+    setTimeout(function () {
+      if ((tableId + 1) < scheduleTables.length) {
+        div.innerHTML = scheduleTables[tableId + 1];
+        document.getElementById('startSpeedback').innerHTML =
+          '<input class="block action" id="startButton" type="submit" value="Start Round" />';
+        insertTimer(waitTime / 60000);
+        const startButton = document.getElementById('startButton');
+        startButton.addEventListener('click', function () {
+          timer(waitTime, (tableId + 1), scheduleTables);
+        });
+        startButton.disabled = false;
+      } else {
+        document.getElementById('startSpeedback').innerHTML = "Hope this Speedback helped you!";
+        div.innerHTML = "See you next time :-)";
+      }
+    }, waitTime);
 
   }
 
@@ -196,24 +235,24 @@
     const slotDiv = document.createElement('div');
 
     const allSlots = document.getElementsByName("slot");
-    if(allSlots.length < 5) {
-        slotDiv.innerHTML = document.getElementById("slot").innerHTML;
-        slotDiv.id = "slot";
-        slotDiv.setAttribute("name", "slot");
-        slots.appendChild(slotDiv);
-        const startTimeEle = slotDiv.querySelector('input#startTime');
-        startTimeEle.addEventListener("change", function () {
-            const startTime = startTimeEle.value;
-            slotDiv.querySelector('input#endTime').setAttribute('min', startTime);
-        });
+    if (allSlots.length < 5) {
+      slotDiv.innerHTML = document.getElementById("slot").innerHTML;
+      slotDiv.id = "slot";
+      slotDiv.setAttribute("name", "slot");
+      slots.appendChild(slotDiv);
+      const startTimeEle = slotDiv.querySelector('input#startTime');
+      startTimeEle.addEventListener("change", function () {
+        const startTime = startTimeEle.value;
+        slotDiv.querySelector('input#endTime').setAttribute('min', startTime);
+      });
     }
   }
 
-  function removeSlot (input) {
-      const allSlots = document.getElementsByName("slot");
-      if(allSlots.length > 1) {
-        input.parentNode.parentNode.remove();
-      }
+  function removeSlot(input) {
+    const allSlots = document.getElementsByName("slot");
+    if (allSlots.length > 1) {
+      input.parentNode.parentNode.remove();
+    }
   }
 
   function toggleForm() {
@@ -230,6 +269,72 @@
       speedbackDiv.style.display = "none";
     }
   }
+  function onTimesUp() {
+  clearInterval(timerInterval);
+}
+
+function startTimer(TIME_LIMIT) {
+  timePassed = 0;
+  timerInterval = setInterval(() => {
+      timePassed = timePassed + 1;
+      timeLeft = TIME_LIMIT - timePassed;
+      document.getElementById("base-timer-label").innerHTML = formatTime(
+          timeLeft
+      );
+      setCircleDasharray(TIME_LIMIT);
+      setRemainingPathColor(TIME_LIMIT, timeLeft);
+
+      if (timeLeft === 0) {
+          onTimesUp();
+      }
+  }, 1000);
+}
+
+function setRemainingPathColor(TIME_LIMIT, timeLeft) {
+  const COLOR_CODES = {
+      info: {
+          color: "green"
+      },
+      warning: {
+          color: "orange",
+          threshold: TIME_LIMIT / 2
+      },
+      alert: {
+          color: "red",
+          threshold: TIME_LIMIT / 4
+      }
+  };
+  if (timeLeft <= COLOR_CODES.alert.threshold) {
+      document
+          .getElementById("base-timer-path-remaining")
+          .classList.remove(COLOR_CODES.warning.color);
+      document
+          .getElementById("base-timer-path-remaining")
+          .classList.add(COLOR_CODES.alert.color);
+  } else if (timeLeft <= COLOR_CODES.warning.threshold) {
+      document
+          .getElementById("base-timer-path-remaining")
+          .classList.remove(COLOR_CODES.info.color);
+      document
+          .getElementById("base-timer-path-remaining")
+          .classList.add(COLOR_CODES.warning.color);
+  }
+}
+
+function calculateTimeFraction(TIME_LIMIT) {
+  const rawTimeFraction = timeLeft / TIME_LIMIT;
+  return rawTimeFraction - (1 / TIME_LIMIT) * (1 - rawTimeFraction);
+}
+
+function setCircleDasharray(TIME_LIMIT) {
+  const circleDasharray = `${(
+      calculateTimeFraction(TIME_LIMIT) * 283
+  ).toFixed(0)} 283`;
+  document
+      .getElementById("base-timer-path-remaining")
+      .setAttribute("stroke-dasharray", circleDasharray);
+}
+
 </script>
 
 </html>
