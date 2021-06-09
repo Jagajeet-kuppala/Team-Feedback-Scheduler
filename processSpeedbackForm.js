@@ -34,6 +34,6 @@ function tableCreator(userPairs) {
         : userPairs[pair][1];
     table = table + `<tr><td>${user1}</td><td>${user2}</td></tr>`;
   }
-  table = table + "</table><br>";
+  table = table + "</table>";
   return table;
 }

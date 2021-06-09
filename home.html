@@ -158,27 +158,37 @@
     div.innerHTML = status;
   }
 
-  function sleep(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
-  }
   function updateSpeedbackSchedulerStatus(schedule) {
+      const MS_TO_MINS_MULTIPLIER = 60000;
       const { scheduleTables, slotTime } = schedule;
       const div = document.getElementById('speedbackScheduleStatus');
       div.innerHTML = scheduleTables[0];
       document.getElementById('startSpeedback').innerHTML =
-          `<input class="block action" id="startButton" onclick="timer(${slotTime * 1000}, 0, ${scheduleTables})" type="submit" value="Start Round" />`;
+          `<input class="block action" id="startButton" type="submit" value="Start Round" />`;
+      document.getElementById('startButton').addEventListener('click', function () {
+          timer((slotTime * MS_TO_MINS_MULTIPLIER), 0, scheduleTables);
+      });
   }
 
   async function timer(waitTime, tableId, scheduleTables) {
       document.getElementById('startButton').disabled = true;
-      await sleep(waitTime);
-      if((tableId+1) < scheduleTables.length) {
-          const div = document.getElementById('speedbackScheduleStatus');
-          div.innerHTML = scheduleTables[tableId+1];
-          document.getElementById('startSpeedback').innerHTML =
-              `<input class="block action" id="startButton" onclick="timer(${waitTime * 1000}, ${tableId+1}, ${scheduleTables})" type="submit" value="Start Round" />`;
-          document.getElementById('startButton').disabled = false;
-      }
+      const div = document.getElementById('speedbackScheduleStatus');
+      setTimeout(function() {
+          if((tableId+1) < scheduleTables.length) {
+              div.innerHTML = scheduleTables[tableId+1];
+              document.getElementById('startSpeedback').innerHTML =
+                  '<input class="block action" id="startButton" type="submit" value="Start Round" />';
+              const startButton = document.getElementById('startButton');
+              startButton.addEventListener('click', function () {
+                timer(waitTime, (tableId + 1), scheduleTables);
+              });
+              startButton.disabled = false;
+          } else {
+              document.getElementById('startSpeedback').innerHTML = "Hope this Speedback helped you!";
+              div.innerHTML = "See you next time :-)";
+          }
+      }, waitTime );
+
   }
 
   function addSlot() {
