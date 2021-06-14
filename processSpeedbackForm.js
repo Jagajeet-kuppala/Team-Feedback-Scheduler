@@ -15,7 +15,7 @@ function processSpeedbackForm(formObject) {
     return {scheduleTables, slotTime};
   } catch (err) {
     Logger.log(err);
-    return err.message;
+    return `<p style="color: red">${err.message}</p>`;
   }
 }
 

@@ -83,8 +83,10 @@
     </div>
     <div id="speedback">
       <div class="center divUsageEffect">
-        <p>Generate Speedback schedules by entering the names of teammates (or nicknames).
-          Just enter names separated by comma and submit to get the list of all pairs :)</p>
+        <p>Generate Speedback schedules by entering the names / nicknames of teammates (comma separated). <br>
+          Specify duration (in minutes) for each speedback round <br>
+          Each round would start with timer, when organiser presses 'Start Round' button!
+        </p>
       </div>
       <div class="center divShadowEffect">
         <form id="speedbackForm" onsubmit="handleSpeedbackFormSubmit(this)">
@@ -94,7 +96,7 @@
             <label for="slotTime">Time per Round (in Mins)</label>
             <input type="number" id="slotTime" name="slotTime" min="2" max="10" required />
           </div>
-          <input type="submit" class="block action" value="Submit" />
+          <input type="submit" id="speedbackSubmit" class="block action" value="Submit" />
         </form>
         <div class="block">
           <label>
@@ -103,7 +105,7 @@
           <div id="startSpeedback"></div>
           <div class="block tableCenter" id="speedbackScheduleStatus">
           </div>
-        </div> 
+        </div>
       </div>
       <div id="speedbackTimer" class="base-timer"></div>
     </div>
@@ -111,6 +113,13 @@
 </body>
 <script>
   const todaysDate = new Date().toISOString().split('T')[0];
+  let speaker = "";
+  if ('speechSynthesis' in window) {
+      speaker = new SpeechSynthesisUtterance();
+  }else{
+      speaker = null;
+  }
+
   document.getElementsByName("startDate")[0].setAttribute('min', todaysDate);
 
   document.getElementsByName("startDate")[0].addEventListener("change", function () {
@@ -162,6 +171,7 @@
   }
 
   function updateSpeedbackSchedulerStatus(schedule) {
+    document.getElementById('speedbackSubmit').disabled = true;
     const MS_TO_MINS_MULTIPLIER = 60000;
     const { scheduleTables, slotTime } = schedule;
     const div = document.getElementById('speedbackScheduleStatus');
@@ -176,7 +186,7 @@
 
   function insertTimer(time) {
     const div = document.getElementById('speedbackTimer');
-    div.innerHTML = 
+    div.innerHTML =
     `<svg class="base-timer__svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
       <g class="base-timer__circle">
         <circle class="base-timer__path-elapsed" cx="50" cy="50" r="45"></circle>
@@ -225,6 +235,7 @@
       } else {
         document.getElementById('startSpeedback').innerHTML = "Hope this Speedback helped you!";
         div.innerHTML = "See you next time :-)";
+        document.getElementById('speedbackSubmit').disabled = false;
       }
     }, waitTime);
 
@@ -270,8 +281,12 @@
     }
   }
   function onTimesUp() {
-  clearInterval(timerInterval);
-}
+    if (speaker) {
+        speaker.text = "Round complete!";
+        window.speechSynthesis.speak(speaker);
+    }
+    clearInterval(timerInterval);
+  }
 
 function startTimer(TIME_LIMIT) {
   timePassed = 0;
@@ -286,6 +301,10 @@ function startTimer(TIME_LIMIT) {
 
       if (timeLeft === 0) {
           onTimesUp();
+      }
+      if (speaker && timeLeft === TIME_LIMIT / 2) {
+        speaker.text = "Half Time! Please switch roles";
+        window.speechSynthesis.speak(speaker);
       }
   }, 1000);
 }

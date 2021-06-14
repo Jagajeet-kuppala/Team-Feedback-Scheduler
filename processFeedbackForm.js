@@ -7,10 +7,10 @@ function processFeedbackForm(formObject) {
         const userPairs = getSchedulePairs(userList);
         scheduleEvents(userPairs, startDate, startTime, endTime);
 
-        return "SUCCESS. Please check your Google Calender";
+        return '<p style="color: green">SUCCESS. Please check your Google Calender</p>';
     } catch(err) {
         Logger.log(err);
-        return err.message;
+        return `<p style="color: red">${err.message}</p>`;
     }
 }
 
