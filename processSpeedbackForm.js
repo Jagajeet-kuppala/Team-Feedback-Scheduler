@@ -2,6 +2,7 @@ function processSpeedbackForm(formObject) {
   try {
     const MAX_USERNAME_LENGTH = 25;
     const { users, slotTime } = formObject;
+    validateSlotTime(parseInt(slotTime));
     const userList = getValidUsers(users);
     for (let itr = 0; itr < userList.length; itr++) {
       userList[itr] = userList[itr].slice(0,MAX_USERNAME_LENGTH);
@@ -15,7 +16,7 @@ function processSpeedbackForm(formObject) {
     return {scheduleTables, slotTime};
   } catch (err) {
     Logger.log(err);
-    return `<p style="color: red">${err.message}</p>`;
+    return { error: `<p style="color: red">${err.message}</p>` };
   }
 }
 
@@ -36,4 +37,15 @@ function tableCreator(userPairs) {
   }
   table = table + "</table>";
   return table;
+}
+
+function validateSlotTime(slotTime) {
+  if (!slotTime) {
+    throw new Error("Round time should not be empty");
+  }
+  if (slotTime < PropertiesService.getUserProperties().getProperty('MIN_SPEEDBACK_SLOT_MINUTES') ||
+      slotTime > PropertiesService.getUserProperties().getProperty('MAX_SPEEDBACK_SLOT_MINUTES')) {
+    throw new Error(`Round time should be between ${PropertiesService.getUserProperties().getProperty('MIN_SPEEDBACK_SLOT_MINUTES')} minutes 
+    and ${PropertiesService.getUserProperties().getProperty('MAX_SPEEDBACK_SLOT_MINUTES')} minutes`);
+  }
 }

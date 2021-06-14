@@ -1,7 +1,13 @@
 function processFeedbackForm(formObject) {
     try {
         Logger.log(formObject);
-        const {users, startDate, startTime, endTime, userDateTime} = formObject;
+        let {users, startDate, startTime, endTime, userDateTime} = formObject;
+        if (!Array.isArray(startTime)) {
+            startTime = [startTime];
+        }
+        if (!Array.isArray(endTime)) {
+            endTime = [endTime];
+        }
         const userList = getValidUsers(users);
         validateDateTime(startDate, startTime, endTime, userDateTime);
         const userPairs = getSchedulePairs(userList);
