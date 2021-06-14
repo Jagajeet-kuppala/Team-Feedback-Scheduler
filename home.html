@@ -86,18 +86,24 @@
         <p>Generate Speedback schedules by entering the names / nicknames of teammates (comma separated). <br>
           Specify duration (in minutes) for each speedback round <br>
           Each round would start with timer, when organiser presses 'Start Round' button! <br>
-          Minimum round time: <?= PropertiesService.getUserProperties().getProperty('MIN_SPEEDBACK_SLOT_MINUTES') ?> Mins,
-          Maximum round time: <?= PropertiesService.getUserProperties().getProperty('MAX_SPEEDBACK_SLOT_MINUTES') ?> Mins
+          Minimum round time: <?= parseInt(PropertiesService.getUserProperties().getProperty('MIN_SPEEDBACK_SLOT_MINUTES')) ?> Mins,
+          Maximum round time: <?= parseInt(PropertiesService.getUserProperties().getProperty('MAX_SPEEDBACK_SLOT_MINUTES')) ?> Mins
         </p>
       </div>
       <div class="center divShadowEffect">
         <form id="speedbackForm" onsubmit="handleSpeedbackFormSubmit(this)">
           <div class="block form-group">
-            <label for="users" class="verticalMiddle">Teammates' Names</label>
-            <input type="text" name="users" placeholder="Comma Separated" required multiple />
-            <label for="slotTime">Time per Round (in Mins)</label>
-            <input type="number" id="slotTime" name="slotTime" min="<?= PropertiesService.getUserProperties().getProperty('MIN_SPEEDBACK_SLOT_MINUTES') ?>"
-                   max="<?= PropertiesService.getUserProperties().getProperty('MAX_SPEEDBACK_SLOT_MINUTES') ?>" required />
+            <div class="block form-group">
+              <label for="users" class="verticalMiddle">Teammates' Names</label>
+              <input type="text" name="users" placeholder="Comma Separated" required multiple />
+            </div>
+            <div class="block form-group">
+              <label for="slotTime">Time per Round (in Mins)</label>
+              <input type="number" id="slotTime" name="slotTime" min="<?= parseInt(PropertiesService.getUserProperties().getProperty('MIN_SPEEDBACK_SLOT_MINUTES')) ?>"
+                     max="<?= parseInt(PropertiesService.getUserProperties().getProperty('MAX_SPEEDBACK_SLOT_MINUTES')) ?>"
+                     placeholder="Min: <?= parseInt(PropertiesService.getUserProperties().getProperty('MIN_SPEEDBACK_SLOT_MINUTES')) ?>, Max: <?= parseInt(PropertiesService.getUserProperties().getProperty('MAX_SPEEDBACK_SLOT_MINUTES')) ?>"
+                     required />
+            </div>
           </div>
           <input type="submit" id="speedbackSubmit" class="block action" value="Submit" />
         </form>
