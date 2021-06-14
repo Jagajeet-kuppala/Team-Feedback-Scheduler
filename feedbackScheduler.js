@@ -1,7 +1,8 @@
 function doGet() {
   globalSettings();
   return HtmlService.createTemplateFromFile('home')
-      .evaluate();
+      .evaluate()
+      .setTitle('Feedback Scheduler - TW');
 }
 
 function include(filename) {
